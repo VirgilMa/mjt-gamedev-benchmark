@@ -6,4 +6,4 @@ Each task directory contains only the agent-facing `workspace/`: the prompt, rea
 
 Task:
 
-- `tasks/t02_circlechase/workspace`
+- `tasks/t01_circlechase/workspace`
