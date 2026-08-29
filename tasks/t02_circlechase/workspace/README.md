@@ -43,43 +43,19 @@ CircleChase 是**回环追踪**轨迹：子弹向目标俯冲，进入外圈半�
 - 时间：`GetGlobalTime_ms()` 取全局毫秒时钟
 - 朝向：`bullet:GetFaceDirection()` 取当前朝向角（度，0°=+X）；`NormalizeAngle(deg)` 把角度归一到 (-180, 180]
 - 参考同文件里兄弟轨迹的实现（如 `UpdateAsChase`/`StartChaseTarget`、`UpdateRepeatHitTarget`/`StartRepeatHitTarget`）——你的实现风格应与它们一致
-- ⚠️ 这些兄弟轨迹是**共享真码**：你实现 CircleChase 时不能改坏它们——`test_trajectories.lua` 会验证 Direction 与 Chase 仍正常飞行
+- ⚠️ 这些兄弟轨迹是**共享真码**：你实现 CircleChase 时不能改坏它们；评测会检查既有轨迹不回归
 
 ## 约束
 
 - 只能修改 `real/` 目录下的代码
-- 禁止修改 `stubs/`、`runtime.lua`（引擎环境桩）与根目录下的 `test_*.lua`（环境自检）
-
-## 自测
-
-`sanity/` 下有两个**不判分**的示例脚本，演示怎么在这套环境里造子弹、逐帧驱动、读取位置——服务端和客户端各一个：
-
-```
-luajit_rolling.exe sanity/example_gas.lua    # 服务端：打印 60 帧位置
-luajit_rolling.exe sanity/example_gac.lua    # 客户端：同场景，打印 60 帧位置
-```
-
-未实现时两端都停在原地不动；实现后应能看到子弹绕向目标，且两端逐帧位置一致。
-这两个脚本只是**用法示例**，不包含任何判分阈值——通过它们不代表通过判分。
-
-环境自检（不得回归）：
-
-```
-luajit_rolling.exe test_m1.lua
-luajit_rolling.exe test_gas.lua
-luajit_rolling.exe test_gac.lua
-luajit_rolling.exe test_flow.lua
-luajit_rolling.exe test_trajectories.lua   # 轨迹系统完整性（18 个轨迹函数齐备，Direction/Chase 正常移动）
-```
-
-luajit 位于 `C:/repos/trunk_c/dev/design/data/AllFormulas/bin/luajit_rolling.exe`。
+- 禁止修改 `stubs/`、`runtime.lua`（引擎环境桩）与评测基础设施
 
 ## 判分
 
 采用 SWE-bench 准则：`resolved = 全部 F2P 转绿 且 全部 P2P 零回归`，二值 1.0 / 0.0。
 
 - **F2P**（修复验证）：两道 CircleChase 行为测试，**不随题目分发**，判分时由出题人按绝对路径调用
-- **P2P**（回归检查）：上面五个环境自检，任一变红直接 0 分
+- **P2P**（回归检查）：评测环境中的既有轨迹检查，任一变红直接 0 分
 
 F2P 测试只断言**本文件描述过的行为**——设计规格首段（回环形状、总时间内收敛命中）、S1–S6 六条、
 环境说明，以及「已就绪的设施」一节列出的字段名与单位换算。
