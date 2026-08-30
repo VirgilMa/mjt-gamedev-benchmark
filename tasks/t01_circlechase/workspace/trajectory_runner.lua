@@ -1,5 +1,5 @@
 -- Deterministic CircleChase trajectory runner.
--- Usage: lua trajectory_runner.lua <server|client> <static|moving> [outer] [inner] [frames]
+-- Usage: lua trajectory_runner.lua <server|client> <static|moving|maneuvering> [outer] [inner] [frames]
 
 local side = arg[1] or "server"
 local targetMode = arg[2] or "moving"
@@ -8,7 +8,10 @@ local radiusInner = tonumber(arg[4]) or 2
 local frames = tonumber(arg[5]) or 600
 
 assert(side == "server" or side == "client", "side must be server or client")
-assert(targetMode == "static" or targetMode == "moving", "target mode must be static or moving")
+assert(
+    targetMode == "static" or targetMode == "moving" or targetMode == "maneuvering",
+    "target mode must be static, moving, or maneuvering"
+)
 
 local DT = 33
 local SPEED = 600
@@ -19,6 +22,9 @@ local CLIENT_TARGET_DELAY_FRAMES = 4
 local function targetPosition(frame)
     if targetMode == "moving" then
         return 1200 + 2 * frame, 100 + frame
+    elseif targetMode == "maneuvering" then
+        return 1200 + 180 * math.sin(frame / 90),
+            300 + 140 * math.sin(frame / 55)
     end
     return 1200, 100
 end
