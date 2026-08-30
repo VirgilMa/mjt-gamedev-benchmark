@@ -51,6 +51,65 @@ msgpack = {
 
 -- 引擎桩 3：luajit 构建差异与简单环境函数
 if not table.new then table.new = function() return {} end end
+-- Standard Lua compatibility for engine code that normally receives LuaJIT's bit module.
+if not math.atan2 then
+    math.atan2 = function(y, x) return math.atan(y, x) end
+end
+if not bit then
+    local UINT32 = 4294967296
+    local INT32 = 2147483648
+
+    local function uint32(value)
+        value = math.floor(tonumber(value) or 0) % UINT32
+        if value < 0 then value = value + UINT32 end
+        return value
+    end
+
+    local function int32(value)
+        value = uint32(value)
+        if value >= INT32 then return value - UINT32 end
+        return value
+    end
+
+    local function combine(a, b, useOr)
+        a, b = uint32(a), uint32(b)
+        local result, place = 0, 1
+        for _ = 1, 32 do
+            local abit, bbit = a % 2, b % 2
+            if (useOr and (abit == 1 or bbit == 1))
+                or (not useOr and abit == 1 and bbit == 1) then
+                result = result + place
+            end
+            a, b, place = math.floor(a / 2), math.floor(b / 2), place * 2
+        end
+        return result
+    end
+
+    bit = {}
+    function bit.band(a, b, ...)
+        local result = combine(a, b, false)
+        for index = 1, select("#", ...) do
+            result = combine(result, select(index, ...), false)
+        end
+        return int32(result)
+    end
+    function bit.bor(a, b, ...)
+        local result = combine(a, b, true)
+        for index = 1, select("#", ...) do
+            result = combine(result, select(index, ...), true)
+        end
+        return int32(result)
+    end
+    function bit.lshift(value, shift)
+        shift = uint32(shift) % 32
+        return int32(uint32(value) * (2 ^ shift))
+    end
+    function bit.rshift(value, shift)
+        shift = uint32(shift) % 32
+        return math.floor(uint32(value) / (2 ^ shift))
+    end
+end
+
 IsInner = function() return true end
 IsInnerClient = IsInner
 function SAFE_CALL(f, ...) return f(...) end
@@ -128,6 +187,8 @@ local __pristine = {
     ["math.max"] = math.max, ["math.min"] = math.min,
     ["math.floor"] = math.floor, ["math.deg"] = math.deg,
     ["math.rad"] = math.rad, ["math.atan2"] = math.atan2,
+    ["bit.band"] = bit.band, ["bit.bor"] = bit.bor,
+    ["bit.lshift"] = bit.lshift, ["bit.rshift"] = bit.rshift,
     ["io.open"] = io.open,
 }
 local __rawassert = assert
