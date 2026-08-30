@@ -244,12 +244,6 @@ RegistClassMember(CBulletData_BezierCircle, "m_SpeedAcceleration") -- 加速度(
 RegistClassMember(CBulletData_BezierCircle, "m_IsBungee")          -- 蹦极模式:速度由曲线高度驱动
 RegistClassMember(CBulletData_BezierCircle, "m_IsPaused")
 
-CBulletData_CircleChase = class()
-RegistClassMember(CBulletData_CircleChase, "m_StartTime")
-RegistClassMember(CBulletData_CircleChase, "m_TotalTime") -- 整体预期时间，主要控制回环的时间
-RegistClassMember(CBulletData_CircleChase, "m_Radius1") -- 小于这个开始回环，但是角速度较小，单位是像素
-RegistClassMember(CBulletData_CircleChase, "m_Radius2") -- 小于这个增大角速度，单位是像素
-
 CBulletData_RepeatHitTarget = class()
 RegistClassMember(CBulletData_RepeatHitTarget, "m_LeftTickTime")
 RegistClassMember(CBulletData_RepeatHitTarget, "m_LastDDirXYLocalAbs")
@@ -315,7 +309,6 @@ BulletTrajectoryClassTb = {
 	[EnumBulletTracjectory.TractionAndCircling] = CBulletData_TractionAndCircling,
 	[EnumBulletTracjectory.EffectBullet] = CBulletData_EffectBullet,
 	[EnumBulletTracjectory.BezierCircle] = CBulletData_BezierCircle,
-	[EnumBulletTracjectory.CircleChase] = CBulletData_CircleChase,
 	[EnumBulletTracjectory.RepeatHitTarget] = CBulletData_RepeatHitTarget,
 	[EnumBulletTracjectory.ForwardChase2D] = CBulletData_ForwardChase2D,
 	[EnumBulletTracjectory.BoatFrontMove2D] = CBulletData_BoatFrontMove2D,
@@ -336,7 +329,6 @@ BulletTrajectory2PublicObj = {
 	[EnumBulletTracjectory.TractionAndCircling] = CBulletData_TractionAndCircling:new(),
 	[EnumBulletTracjectory.EffectBullet] = CBulletData_EffectBullet:new(),
 	[EnumBulletTracjectory.BezierCircle] = CBulletData_BezierCircle:new(),
-	[EnumBulletTracjectory.CircleChase] = CBulletData_CircleChase:new(),
 	[EnumBulletTracjectory.RepeatHitTarget] = CBulletData_RepeatHitTarget:new(),
 	[EnumBulletTracjectory.ForwardChase2D] = CBulletData_ForwardChase2D:new(),
 	[EnumBulletTracjectory.BoatFrontMove2D] = CBulletData_BoatFrontMove2D:new(),

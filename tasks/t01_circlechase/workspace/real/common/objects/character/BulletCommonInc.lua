@@ -28,7 +28,6 @@ EnumBulletTracjectory = {
     BezierCircle = 23,
     BaFangJue = 24,
     ParabolaExPos = 25,
-    CircleChase = 26,
     RepeatHitTarget = 27,
     ForwardChase2D = 28,
     BoatFrontMove2D = 29,
@@ -43,7 +42,6 @@ EnumBulletTracjectoryNeedTarget = {
     [EnumBulletTracjectory.Chase] = true,
     [EnumBulletTracjectory.BezierCurveTarget] = true,
     [EnumBulletTracjectory.EffectBullet] = true,
-    [EnumBulletTracjectory.CircleChase ] = true,
     [EnumBulletTracjectory.RepeatHitTarget] = true,
     [EnumBulletTracjectory.ForwardChase2D] = true,
 }

@@ -14,6 +14,7 @@ local DT = 33
 local SPEED = 600
 local TOTAL_TIME = 3000
 local START_X, START_Y = 100, 100
+local CLIENT_TARGET_DELAY_FRAMES = 4
 
 local function targetPosition(frame)
     if targetMode == "moving" then
@@ -240,7 +241,7 @@ else
     printPoint(0, START_X, START_Y, target.x, target.y, observed.x, observed.y)
     for frame = 1, frames do
         target.x, target.y = targetPosition(frame)
-        observed.x, observed.y = targetPosition(frame)
+        observed.x, observed.y = targetPosition(math.max(0, frame - CLIENT_TARGET_DELAY_FRAMES))
         g_TimeMs = g_TimeMs + DT
         bullet:OnMoveTick(DT)
         local diffX = moveData.m_CurX - bullet.m_OldX
