@@ -19,4 +19,6 @@
 - `R` 和 `r` 都应影响回环形态，增大 `R` 应产生更大的回环。
 - 移动目标场景中，客户端使用延迟 `4` 帧的目标位置快照。客户端与服务端子弹轨迹应产生实际差异，但逐帧距离的最大值必须小于 `64px`。
 
-仅修改 `real/` 下的实现代码并保留其他轨迹行为。可运行 `lua trajectory_runner.lua server moving` 或 `lua trajectory_runner.lua client moving` 输出逐帧 CSV 轨迹。
+仅修改 `real/` 下的实现代码并保留其他轨迹行为。不得修改 `trajectory_runner.lua`、`runtime.lua` 和 `stubs/`下的文件，否则完整性检查直接判为 `0` 分。
+
+可运行 `lua trajectory_runner.lua server moving` 或 `lua trajectory_runner.lua client moving` 输出逐帧 CSV 轨迹。
